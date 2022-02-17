@@ -1,0 +1,18 @@
+eureka:
+  datacenter: Test Data Center
+  environment: development
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+eureka:
+  datacenter: BlaBla Data Center
+  environment: production
+  instance:
+    preferIpAddress: true

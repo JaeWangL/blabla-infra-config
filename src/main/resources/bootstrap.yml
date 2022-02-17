@@ -1,0 +1,16 @@
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+encrypt:
+  key: ${CONFIG_ENCRYPT_KEY}
+
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+encrypt:
+  # TODO: Support keyStore with jks

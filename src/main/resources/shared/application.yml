@@ -1,0 +1,87 @@
+# Server config
+server:
+  ## Should be included to show message, if not error message will be empty
+  error:
+    include-message: always
+    include-binding-errors: always
+
+app:
+  eureka:
+    host: ${env.EUREKA_HOST}
+    port: ${env.EUREKA_PORT}
+    user: ${env.EUREKA_USER}
+    pass: ${env.EUREKA_PASSWORD}
+  kafka:
+    broker:
+      host: ${env.KAFKA_HOST}
+      port: ${env.KAFKA_PORT}
+    api:
+      key: ${env.KAFKA_API_KEY}
+      secret: ${env.KAFKA_API_SECRET}
+
+spring:
+  kafka:
+    bootstrap-servers: ${app.kafka.broker.host}:${app.kafka.broker.port}
+    properties:
+      security.protocol: SASL_SSL
+      sasl:
+        jaas.config: org.apache.kafka.common.security.plain.PlainLoginModule   required username='${app.kafka.api.key}'   password='${app.kafka.api.secret}';
+        mechanism: PLAIN
+      ssl:
+        endpoint.identification.algorithm: https
+      session.timeout.ms: 45000
+    producer:
+      properties:
+        spring.json.add.type.headers: false
+    consumer:
+      auto-offset-reset: earliest
+      properties:
+        isolation.level: read_committed
+      # NOTE: Add all events here
+      topic:
+        postCreadted: postCreadted
+
+  cloud:
+    # As Spring Cloud Ribbon is in maintenance mode.
+    # It is recommended switching to BlockingLoadBalancerClient instead.
+    loadbalancer.ribbon.enabled: false
+
+  # TODO: Disable distributed tracing by default (with zipkin and sleuth)
+
+# Service discovery
+eureka:
+  instance:
+    prefer-ip-address: false
+    instance-id: ${spring.application.name}:${random.int}
+    hostname: ${app.eureka.host}
+  client:
+    fetch-registry: true
+    serviceUrl:
+      defaultZone: http://${app.eureka.user}:${app.eureka.pass}@${app.eureka.host}:${app.eureka.port}/eureka/
+    healthcheck:
+      enabled: true
+
+# Management
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    shutdown:
+      enabled: false
+    health:
+      show-details: ALWAYS
+
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    serviceUrl:
+      defaultZone: http://${app.eureka.user}:${app.eureka.pass}@${app.eureka.host}/eureka/

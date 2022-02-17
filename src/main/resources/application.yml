@@ -1,0 +1,56 @@
+server:
+  port: 8888
+
+app:
+  config:
+    user: ${env.CONFIG_SERVICE_USER}
+    password: ${env.CONFIG_SERVICE_PASSWORD}
+  kafka:
+    broker:
+      host: ${env.KAFKA_HOST}
+      port: ${env.KAFKA_PORT}
+    api:
+      key: ${env.KAFKA_API_KEY}
+      secret: ${env.KAFKA_API_SECRET}
+
+spring:
+  profiles:
+    active: native
+  application:
+    name: config
+  cloud:
+    config:
+      server:
+        native:
+          search-locations: classpath:/shared
+    bus:
+      enabled: true
+      refresh:
+        enabled: true
+      trace:
+        enabled: true
+  kafka:
+    bootstrap-servers: ${app.kafka.broker.host}:${app.kafka.broker.port}
+    properties:
+      security.protocol: SASL_SSL
+      sasl:
+        jaas.config: org.apache.kafka.common.security.plain.PlainLoginModule   required username='${app.kafka.api.key}'   password='${app.kafka.api.secret}';
+        mechanism: PLAIN
+      ssl:
+        endpoint.identification.algorithm: https
+      session.timeout.ms: 45000
+
+# Logging
+logging:
+  level:
+    root: info
+
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+  cloud:
+    config:
+      server.encrypt.enabled: true
