@@ -54,3 +54,5 @@ spring:
   cloud:
     config:
       server.encrypt.enabled: true
+
+server.port: 8080
