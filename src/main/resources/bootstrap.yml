@@ -4,7 +4,7 @@ spring:
       on-profile: dev
 
 encrypt:
-  key: ${CONFIG_ENCRYPT_KEY}
+  key: ${env.CONFIG_ENCRYPT_KEY}
 
 ---
 spring:
