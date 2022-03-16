@@ -1,0 +1,27 @@
+app:
+  mysql:
+    host: blank
+    port: blank
+    user: blank
+    password: blank
+    database: blank
+  kafka:
+    group:
+      joinedRoomMember: joined-room-member-group
+      leavedRoomMember: leaved-room-member-group
+
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: validate
+  datasource:
+    url: jdbc:mysql://${app.mysql.host}:${app.mysql.port}/${app.mysql.database}?useSSL=true&requireSSL=false&serverTimezone=UTC
+    username: ${app.mysql.user}
+    password: ${app.mysql.password}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+---
+spring:
+  config:
+    activate:
+      on-profile: prod

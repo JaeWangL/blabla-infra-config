@@ -1,7 +1,8 @@
 app:
   services:
-    posts-query: posts-query
-    posts-command: posts-command
+    locations-api: locations-api
+    posts-api: posts-api
+    upload-api: upload-api
 
 spring:
   cloud:
@@ -36,7 +37,7 @@ resilience4j:
           - org.springframework.web.reactive.function.client.WebClientRequestException
           - org.springframework.web.reactive.function.client.WebClientResponseException$ServiceUnavailable
     instances:
-      posts-query:
+      posts-api:
         baseConfig: default
 
   retry:
@@ -52,7 +53,7 @@ resilience4j:
           - org.springframework.web.reactive.function.client.WebClientRequestException
           - org.springframework.web.reactive.function.client.WebClientResponseException$ServiceUnavailable
     instances:
-      posts-query:
+      posts-api:
         baseConfig: default
         maxRetryAttempts: 4
         waitDuration: 1000
@@ -72,6 +73,6 @@ resilience4j:
         cancelRunningFuture: false
         timeoutDuration: 2s
     instances:
-      posts-query:
+      posts-api:
         baseConfig: default
         cancelRunningFuture: true
