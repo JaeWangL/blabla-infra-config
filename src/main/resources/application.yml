@@ -3,26 +3,30 @@ server:
 
 app:
   config:
-    user: ${env.CONFIG_SERVICE_USER}
-    password: ${env.CONFIG_SERVICE_PASSWORD}
+    user: blabla-user
+    password: blabla-password
   kafka:
     broker:
-      host: ${env.KAFKA_HOST}
-      port: ${env.KAFKA_PORT}
+      host: test
+      port: 9092
     api:
-      key: ${env.KAFKA_API_KEY}
-      secret: ${env.KAFKA_API_SECRET}
+      key: test
+      secret: test
 
 spring:
   profiles:
-    active: native
+    active: default
   application:
     name: config
   cloud:
     config:
       server:
-        native:
-          search-locations: classpath:/shared
+        git:
+          default-label: main
+          uri: https://github.com/test
+          username: test
+          password: secret_key
+
     bus:
       enabled: true
       refresh:
